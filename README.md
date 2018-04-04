@@ -1,16 +1,17 @@
 # Description
-This repo shows how to migrate an existing Flask app to one that can be built
-into a Docker image using
-[`s2i`](https://github.com/openshift/source-to-image).
+This repo shows how to migrate an existing Flask app to one that can use
+OpenShift's
+[`s2i`](https://github.com/openshift/source-to-image) tool to create
+a Docker image of the app.
 
 `s2i` builds Docker images using a common two-stage build pattern: the
 source code is piped to a **builder image**, prepared, and then output
 into a final image. It's most interesting feature is that it can do all this
-*without a Dockerifle*.
+*without a Dockerfile*.
 
 NOTE: If starting off fresh without any existing, it may be better to use the
 `s2i create <image name> <destination directory>` command from the
-[`s2i CLI`](https://github.com/openshift/source-to-image/blob/master/docs/cli.md)
+[`s2i` CLI](https://github.com/openshift/source-to-image/blob/master/docs/cli.md)
 
 ### Building the Docker image: `s2i build` and `docker run`
 Assuming the final image name is `hello-world-flask:v0`:
@@ -53,3 +54,23 @@ flask-repo
     |-- .s2i                # new folder
         |-- environment     # new file
 ```
+
+# Other notes
+
+### OpenShift
+**This repo cannot be directly** deployed as a git repo to OpenShift 3; see
+an example
+**[HERE](https://github.com/geordgez/flask-openshift-upload-ex)** instead.
+This is
+because the `.s2i/` folder and app files need to be directly in the repo
+folder rather than in any of the repo's child folders. To see the Flask app
+adapted for directly deploying a git repo to OpenShift and letting the
+OpenShift instance automatically build via `s2i`, again see
+[the sister repo mentioned above](https://github.com/geordgez/flask-openshift-upload-ex).
+
+The sister repo can be directly deployed on OpenShift Online / OpenShift
+Container Platform via `Add to project > Browse Catalog > Python > 3.5` and
+pasting a fork of the git repository. *NOTE: the current app succesfully
+runs on both 3.5 (as of 04-03-2018, 3.5 is the current latest version
+on OpenShift's online base images) and 3.6 (available via CentOS's
+Docker Hub).*
